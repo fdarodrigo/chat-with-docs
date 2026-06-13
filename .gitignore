@@ -1,0 +1,33 @@
+# --- Environment files ---
+.env
+.env.local
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+
+# --- ChromaDB persistence ---
+chroma_data/
+backend/chroma_data/
+
+# --- Uploaded files ---
+uploads/
+
+# --- Node / frontend ---
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# --- Editors / OS ---
+.vscode/
+.idea/
+.DS_Store
+
+# --- Logs ---
+*.log
+npm-debug.log*
