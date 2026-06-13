@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { AnimatedInput } from './components/AnimatedInput';
 import { ChatInterface } from './components/ChatInterface';
 import { DocumentList } from './components/DocumentList';
 import { DocumentUploader } from './components/DocumentUploader';
@@ -14,26 +16,50 @@ function App() {
     deleteDocument,
   } = useDocuments();
   const { messages, isLoading: chatLoading, error: chatError, sendMessage } = useChat();
+  const [landingInput, setLandingInput] = useState('');
+  const hasMessages = messages.length > 0;
+
+  const handleLandingSubmit = () => {
+    const question = landingInput.trim();
+    if (!question || chatLoading) return;
+    setLandingInput('');
+    void sendMessage(question);
+  };
+
+  if (!hasMessages) {
+    return (
+      <div className="empty-state">
+        <h1 className="empty-title">Chat With Your Docs</h1>
+        <p className="empty-subtitle">Upload a document and ask anything about it.</p>
+        <AnimatedInput
+          value={landingInput}
+          onChange={setLandingInput}
+          onSubmit={handleLandingSubmit}
+          disabled={chatLoading}
+        />
+        {chatError && <p className="empty-error">{chatError}</p>}
+      </div>
+    );
+  }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-slate-50 text-slate-900">
-      <aside className="flex w-64 shrink-0 flex-col gap-4 overflow-y-auto border-r border-slate-200 bg-white p-4">
-        <div>
-          <h1 className="text-lg font-semibold text-slate-900">Chat With Your Docs</h1>
-          <p className="mt-1 text-xs text-slate-500">Upload documents and ask questions about their content.</p>
+    <div className="app-active">
+      <aside className="sidebar">
+        <h1 className="sidebar-title">Chat With Your Docs</h1>
+
+        <div className="sidebar-uploader-wrap">
+          <DocumentUploader onUpload={uploadDocument} uploadingFilename={uploadingFilename} />
         </div>
 
-        <DocumentUploader onUpload={uploadDocument} uploadingFilename={uploadingFilename} />
+        {documentsError && <p className="sidebar-error">{documentsError}</p>}
 
-        {documentsError && <p className="text-xs text-red-600">{documentsError}</p>}
-
-        <div className="flex-1">
-          <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">Documents</h2>
+        <div className="sidebar-documents">
+          <h2 className="sidebar-section-label">Documents</h2>
           <DocumentList documents={documents} isLoading={documentsLoading} onDelete={deleteDocument} />
         </div>
       </aside>
 
-      <main className="flex-1">
+      <main className="main-area">
         <ChatInterface messages={messages} isLoading={chatLoading} error={chatError} onSend={sendMessage} />
       </main>
     </div>
