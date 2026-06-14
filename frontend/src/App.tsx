@@ -1,5 +1,3 @@
-import { useState } from 'react';
-import { AnimatedInput } from './components/AnimatedInput';
 import { ChatInterface } from './components/ChatInterface';
 import { DocumentList } from './components/DocumentList';
 import { DocumentUploader } from './components/DocumentUploader';
@@ -17,15 +15,7 @@ function App() {
     deleteDocument,
   } = useDocuments();
   const { messages, isLoading: chatLoading, error: chatError, sendMessage } = useChat();
-  const [landingInput, setLandingInput] = useState('');
   const hasContent = messages.length > 0 || documents.length > 0;
-
-  const handleLandingSubmit = () => {
-    const question = landingInput.trim();
-    if (!question || chatLoading) return;
-    setLandingInput('');
-    void sendMessage(question);
-  };
 
   if (!isInitialLoadComplete) {
     return null;
@@ -40,12 +30,6 @@ function App() {
 
         <h1 className="empty-title">Chat With Your Docs</h1>
         <p className="empty-subtitle">Upload a document and ask anything about it.</p>
-        <AnimatedInput
-          value={landingInput}
-          onChange={setLandingInput}
-          onSubmit={handleLandingSubmit}
-          disabled={chatLoading}
-        />
         {chatError && <p className="empty-error">{chatError}</p>}
       </div>
     );
