@@ -5,6 +5,7 @@ import type { DocumentInfo } from '../types';
 interface UseDocumentsResult {
   documents: DocumentInfo[];
   isLoading: boolean;
+  isInitialLoadComplete: boolean;
   error: string | null;
   uploadingFilename: string | null;
   refresh: () => Promise<void>;
@@ -16,6 +17,7 @@ interface UseDocumentsResult {
 export function useDocuments(): UseDocumentsResult {
   const [documents, setDocuments] = useState<DocumentInfo[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isInitialLoadComplete, setIsInitialLoadComplete] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [uploadingFilename, setUploadingFilename] = useState<string | null>(null);
 
@@ -29,6 +31,7 @@ export function useDocuments(): UseDocumentsResult {
       setError(err instanceof ApiError ? err.message : 'Failed to load documents.');
     } finally {
       setIsLoading(false);
+      setIsInitialLoadComplete(true);
     }
   }, []);
 
@@ -65,5 +68,5 @@ export function useDocuments(): UseDocumentsResult {
     [refresh],
   );
 
-  return { documents, isLoading, error, uploadingFilename, refresh, uploadDocument, deleteDocument };
+  return { documents, isLoading, isInitialLoadComplete, error, uploadingFilename, refresh, uploadDocument, deleteDocument };
 }

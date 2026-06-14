@@ -1,8 +1,10 @@
 import { useRef, useState } from 'react';
 import type { ChangeEvent, DragEvent } from 'react';
+import type { DocumentInfo } from '../types';
 import '../styles/uploader.css';
 
 interface DocumentUploaderProps {
+  documents: DocumentInfo[];
   onUpload: (file: File) => Promise<void>;
   uploadingFilename: string | null;
 }
@@ -10,10 +12,11 @@ interface DocumentUploaderProps {
 const ACCEPTED_EXTENSIONS = '.pdf,.docx,.txt';
 
 /** Drag-and-drop (or click-to-browse) zone for uploading a PDF, DOCX, or TXT document. */
-export function DocumentUploader({ onUpload, uploadingFilename }: DocumentUploaderProps) {
+export function DocumentUploader({ documents, onUpload, uploadingFilename }: DocumentUploaderProps) {
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const isUploading = uploadingFilename !== null;
+  const lastUploaded = documents[documents.length - 1];
 
   const handleFile = (file: File | undefined) => {
     if (!file || isUploading) return;
@@ -67,6 +70,11 @@ export function DocumentUploader({ onUpload, uploadingFilename }: DocumentUpload
           </div>
         )}
       </div>
+      {!isUploading && lastUploaded && (
+        <p className="upload-current-doc" title={lastUploaded.filename}>
+          📄 {lastUploaded.filename}
+        </p>
+      )}
       <input
         type="file"
         accept={ACCEPTED_EXTENSIONS}

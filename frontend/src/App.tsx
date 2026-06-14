@@ -10,6 +10,7 @@ function App() {
   const {
     documents,
     isLoading: documentsLoading,
+    isInitialLoadComplete,
     error: documentsError,
     uploadingFilename,
     uploadDocument,
@@ -17,7 +18,7 @@ function App() {
   } = useDocuments();
   const { messages, isLoading: chatLoading, error: chatError, sendMessage } = useChat();
   const [landingInput, setLandingInput] = useState('');
-  const hasMessages = messages.length > 0;
+  const hasContent = messages.length > 0 || documents.length > 0;
 
   const handleLandingSubmit = () => {
     const question = landingInput.trim();
@@ -26,9 +27,17 @@ function App() {
     void sendMessage(question);
   };
 
-  if (!hasMessages) {
+  if (!isInitialLoadComplete) {
+    return null;
+  }
+
+  if (!hasContent) {
     return (
       <div className="empty-state">
+         <div className="sidebar-uploader-wrap">
+          <DocumentUploader documents={documents} onUpload={uploadDocument} uploadingFilename={uploadingFilename} />
+        </div>
+
         <h1 className="empty-title">Chat With Your Docs</h1>
         <p className="empty-subtitle">Upload a document and ask anything about it.</p>
         <AnimatedInput
@@ -48,7 +57,7 @@ function App() {
         <h1 className="sidebar-title">Chat With Your Docs</h1>
 
         <div className="sidebar-uploader-wrap">
-          <DocumentUploader onUpload={uploadDocument} uploadingFilename={uploadingFilename} />
+          <DocumentUploader documents={documents} onUpload={uploadDocument} uploadingFilename={uploadingFilename} />
         </div>
 
         {documentsError && <p className="sidebar-error">{documentsError}</p>}

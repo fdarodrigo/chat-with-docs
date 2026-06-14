@@ -30,12 +30,6 @@ export function AnimatedInput({ value, onChange, onSubmit, disabled, placeholder
 
   return (
     <div id="poda" className={wide ? 'poda-wide' : undefined}>
-      <div className="glow" />
-      <div className="darkBorderBg" />
-      <div className="darkBorderBg" />
-      <div className="darkBorderBg" />
-      <div className="white" />
-      <div className="border" />
       <div id="main">
         <input
           className="input"
@@ -47,7 +41,7 @@ export function AnimatedInput({ value, onChange, onSubmit, disabled, placeholder
           onKeyDown={handleKeyDown}
           disabled={disabled}
         />
-        <div id="pink-mask" />
+
         <div className="filterBorder" />
         <button id="filter-icon" type="button" onClick={submit} disabled={disabled} aria-label="Send message">
           <svg fill="none" viewBox="0 0 24 24" width="20" height="20">
@@ -60,22 +54,6 @@ export function AnimatedInput({ value, onChange, onSubmit, disabled, placeholder
             />
           </svg>
         </button>
-        <div id="search-icon">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="17"
-            height="17"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <circle cx="11" cy="11" r="8" />
-            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-          </svg>
-        </div>
       </div>
     </div>
   );
